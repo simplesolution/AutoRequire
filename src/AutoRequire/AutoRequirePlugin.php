@@ -36,9 +36,7 @@ class AutoRequirePlugin implements PluginInterface, EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            PluginEvents::PRE_COMMAND_RUN => [
-                ['autoRequirePackages', 0]
-            ],
+            'pre-command-run' => 'autoRequirePackages',
         ];
     }
 
