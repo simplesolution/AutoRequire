@@ -1,0 +1,19 @@
+{
+    "name": "simplesolution/auto-require",
+    "description": "A Plugin which makes it easy to load private packages",
+    "type": "composer-plugin",
+    "require": {
+        "composer-plugin-api": "^1.1",
+        "cweagans/composer-configurable-plugin": "^1.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tobias Franek",
+            "email": "tobias.franek@simplesolution.at"
+        }
+    ],
+    "extra": {
+        "class": "SimpleSolution\\AutoRequire\\AutoRequirePlugin"
+    }
+}
