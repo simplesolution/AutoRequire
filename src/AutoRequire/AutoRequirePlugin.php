@@ -8,6 +8,7 @@ use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Plugin\PluginEvents;
 use Composer\Plugin\PreCommandRunEvent;
+use hiqdev\composer\config\Builder;
 
 class AutoRequirePlugin implements PluginInterface, EventSubscriberInterface
 {
@@ -21,29 +22,48 @@ class AutoRequirePlugin implements PluginInterface, EventSubscriberInterface
     {
         $this->composer = $composer;
         $this->io = $io;
-        $this->configuration = [
-            'vendor-name' => [
-                'type' => 'string',
-                'default' => 'yourvendor'
-            ]
-        ];
-
-        $this->configure($composer->getPackage()->getExtra(), 'simplesolution/auto-require');
-
-        $this->vendorName = $this->getConfig('vendor-name');
+        if(isset($this->composer->getPackage()->getExtra()['vendor-name'])) {
+            $this->vendorName = $this->composer->getPackage()->getExtra()['vendor-name'];
+        } else {
+            $this->vendorName = 'yourpackage';
+        }
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            'pre-command-run' => 'autoRequirePackages',
+            'pre-command-run' => 'autoRequirePackagesPreRequire',
+            'pre-update-cmd' => 'autoRequirePackagesPreUpdate'
         ];
     }
 
-    public function autoRequirePackages($event)
-    {
-        $packages = $this->composer->getPackage()->getRequires();
+    public function autoRequirePackagesPreRequire($event)
+    {   
+        if($event->getCommand() == 'require') {
+            $companyPackages = [];
+            $commandPackages = $event->getInput()->getArgument('packages');
+            foreach($commandPackages as $package) {
+                $companyPackages[explode('=', $package)[0]] = $package; 
+            }
+            $repository = $this->composer->getRepositoryManager();
+            foreach($companyPackages as $packageName => $package) {
+                if($repository->findPackage($packageName, '*')) {
+                    unset($companyPackages[$packageName]);
+                }
+            }
+            foreach($companyPackages as $packageName => $package) {
+                $name = explode('/', $packageName)[1];
+                $url = 'git@github.com:' . $this->vendorName . '/'. $this->vendorName . '.' . $name . '.git';
+                $repository->addRepository($repository->createRepository('vcs', ['url' => $url], $packageName)); 
+            }
+        }
+    }
+
+
+    public function autoRequirePackagesPreUpdate($event)
+    {   
         $companyPackages = [];
+        $packages = $this->composer->getPackage()->getRequires();
         foreach($packages as $packageName => $package) {
             if($this->startsWith($packageName, $this->vendorName)) {
                 $companyPackages[$packageName] = $package;

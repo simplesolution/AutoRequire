@@ -3,8 +3,7 @@
     "description": "A Plugin which makes it easy to load private packages",
     "type": "composer-plugin",
     "require": {
-        "composer-plugin-api": "^1.1",
-        "cweagans/composer-configurable-plugin": "^1.0"
+        "composer-plugin-api": "^1.1"
     },
     "license": "MIT",
     "authors": [
