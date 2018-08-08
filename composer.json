@@ -13,6 +13,11 @@
             "email": "tobias.franek@simplesolution.at"
         }
     ],
+    "autoload": {
+        "psr-4": {
+          "SimpleSolution\\": "src"
+        }
+      },
     "extra": {
         "class": "SimpleSolution\\AutoRequire\\AutoRequirePlugin"
     }
