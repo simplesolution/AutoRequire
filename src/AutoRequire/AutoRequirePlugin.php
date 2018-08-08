@@ -15,8 +15,6 @@ class AutoRequirePlugin implements PluginInterface, EventSubscriberInterface
     protected $composer;
     protected $io;
     protected $vendorName;
-
-    use \cweagans\Composer\ConfigurablePlugin; 
  
     public function activate(Composer $composer, IOInterface $io)
     {
