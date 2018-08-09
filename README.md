@@ -20,9 +20,23 @@ You can configurate the vendor name just by adding:
 
 ```json
 "extra": {
-  "vendor-name": "yourpackagename"
+  "auto-require": {
+    "vendor-name": "yourpackagename"
+  }
 }
 ```
+
+You can configurate the path scheme just by adding:
+
+```json
+"extra": {
+  "auto-require": {
+    "path-scheme": "'{vendorName}/{vendorName}.{name}'"
+  }
+}
+```
+
+`vendorName` and `name` are fixed variables that return the vendorName or the name of the package.
 
 ## How To Use
 
