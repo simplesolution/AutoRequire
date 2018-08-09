@@ -22,10 +22,15 @@ class AutoRequirePlugin implements PluginInterface, EventSubscriberInterface
     {
         $this->composer = $composer;
         $this->io = $io;
-        if(isset($this->composer->getPackage()->getExtra()['vendor-name'])) {
-            $this->vendorName = $this->composer->getPackage()->getExtra()['vendor-name'];
+        if(isset($this->composer->getPackage()->getExtra()['auto-require']['vendor-name'])) {
+            $this->vendorName = $this->composer->getPackage()->getExtra()['auto-require']['vendor-name'];
         } else {
             $this->vendorName = 'yourpackage';
+        }
+        if(isset($this->composer->getPackage()->getExtra()['auto-require']['path-scheme'])) {
+            $this->pathScheme = $this->composer->getPackage()->getExtra()['auto-require']['path-scheme'];
+        } else {
+            $this->pathScheme = '{vendorName}/{vendorName}.{name}';
         }
     }
 
@@ -53,7 +58,8 @@ class AutoRequirePlugin implements PluginInterface, EventSubscriberInterface
             }
             foreach($companyPackages as $packageName => $package) {
                 $name = explode('/', $packageName)[1];
-                $url = 'git@github.com:' . $this->vendorName . '/'. $this->vendorName . '.' . $name . '.git';
+                $filledPathScheme = str_replace(['{vendorName}', '{name}'], [$this->vendorName, $name], $this->pathScheme);
+                $url = 'git@github.com:' . $filledPathScheme . '.git';
                 $repository->addRepository($repository->createRepository('vcs', ['url' => $url], $packageName)); 
             }
         }
