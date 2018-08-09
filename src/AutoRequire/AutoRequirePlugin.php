@@ -136,9 +136,9 @@ class AutoRequirePlugin implements PluginInterface, EventSubscriberInterface
      * checks if the given string starts with a certain set of characters
      * @param string $haystack the whole string
      * @param string $needle character set which should be searched for
-     * @return int
+     * @return bool
      */
-    private  function startsWith(string $haystack, string $needle) : int
+    private  function startsWith(string $haystack, string $needle) : bool
     {
         $length = strlen($needle);
         return (substr($haystack, 0, $length) === $needle);
@@ -148,9 +148,9 @@ class AutoRequirePlugin implements PluginInterface, EventSubscriberInterface
      * checks if the given string ends with a certain set of characters
      * @param string $haystack the whole string
      * @param string $needle character set which should be searched for
-     * @return int
+     * @return bool
      */
-    private  function endsWith(string $haystack, string $needle) : int
+    private  function endsWith(string $haystack, string $needle) : bool
     {
         $length = strlen($needle);
 
