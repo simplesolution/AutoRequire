@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SimpleSolution\AutoRequire;
 
@@ -8,14 +9,46 @@ use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Plugin\PluginEvents;
 use Composer\Plugin\PreCommandRunEvent;
-use hiqdev\composer\config\Builder;
+use Composer\Script\Event;
 
+/**
+ * A Composer Plugin which auto requires private repositories
+ *
+ * @author Tobias Franek <tobias.franek@simplesolution.at>
+ * @license MIT - Simple Solution <office@simplesolution.at> 
+ */
 class AutoRequirePlugin implements PluginInterface, EventSubscriberInterface
 {
+    /**
+     * the composer instance
+     * @var Composer
+     */
     protected $composer;
+
+    /**
+     * the Input Output Interface
+     * @var IOInterface
+     */
     protected $io;
+
+    /**
+     * the name of the vendor
+     * @var string
+     */
     protected $vendorName;
  
+    /**
+     * the scheme of the path
+     * @var string
+     */
+    protected $pathScheme;
+
+    /**
+     * activate the composer plugins
+     * @param Composer $composer the composer instance
+     * @param IOInterface $io the Input Output Interface of the console
+     * @return void
+     */
     public function activate(Composer $composer, IOInterface $io)
     {
         $this->composer = $composer;
@@ -32,7 +65,11 @@ class AutoRequirePlugin implements PluginInterface, EventSubscriberInterface
         }
     }
 
-    public static function getSubscribedEvents()
+    /**
+     * Subscribes to composer events
+     * @return array
+     */
+    public static function getSubscribedEvents() : array
     {
         return [
             'pre-command-run' => 'autoRequirePackagesPreRequire',
@@ -40,7 +77,12 @@ class AutoRequirePlugin implements PluginInterface, EventSubscriberInterface
         ];
     }
 
-    public function autoRequirePackagesPreRequire($event)
+    /**
+     * Method for the pre-command-run event
+     * @param PreCommandRunEvent $event passes the event
+     * @return void
+     */
+    public function autoRequirePackagesPreRequire(PreCommandRunEvent $event)
     {   
         if($event->getCommand() == 'require') {
             $companyPackages = [];
@@ -63,8 +105,12 @@ class AutoRequirePlugin implements PluginInterface, EventSubscriberInterface
         }
     }
 
-
-    public function autoRequirePackagesPreUpdate($event)
+    /**
+     * Method for the pre-update-cmd event
+     * @param Event $event passes the event
+     * @return void
+     */
+    public function autoRequirePackagesPreUpdate(Event $event)
     {   
         $companyPackages = [];
         $packages = $this->composer->getPackage()->getRequires();
@@ -86,13 +132,25 @@ class AutoRequirePlugin implements PluginInterface, EventSubscriberInterface
         }
     }
 
-    private  function startsWith($haystack, $needle)
+    /**
+     * checks if the given string starts with a certain set of characters
+     * @param string $haystack the whole string
+     * @param string $needle character set which should be searched for
+     * @return int
+     */
+    private  function startsWith(string $haystack, string $needle) : int
     {
         $length = strlen($needle);
         return (substr($haystack, 0, $length) === $needle);
     }
 
-    private  function endsWith($haystack, $needle)
+    /**
+     * checks if the given string ends with a certain set of characters
+     * @param string $haystack the whole string
+     * @param string $needle character set which should be searched for
+     * @return int
+     */
+    private  function endsWith(string $haystack, string $needle) : int
     {
         $length = strlen($needle);
 
