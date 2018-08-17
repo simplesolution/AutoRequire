@@ -41,3 +41,7 @@ You can configurate the path scheme just by adding:
 ## How To Use
 
 just use the `composer require` or the `composer update` command as normal and your Packages will be included. When you use the Plugin for the first time composer will ask you to create an github token that allows it to access the repository easier.
+
+## Authors
+
+[Tobias Franek (tobias.franek@gmail.com)](https://github.com/TobiasFranek)
